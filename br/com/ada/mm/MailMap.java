@@ -1,5 +1,6 @@
-package br.com.ada.email;
+package br.com.ada.mm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,7 +38,7 @@ public class MailMap {
     } else {
       var existingSenderMessages = this.arquivo.get(message.sender);
       existingSenderMessages.add(message);
-      arquivo.put(message.sender, existingSenderMessages);
+      arquivo.put(message.getSender(), existingSenderMessages);
     }
   }
 
@@ -67,11 +68,18 @@ public class MailMap {
     System.out.println("Total de mensagens enviadas por " + sender + " = " + count);
   }
 
-  public List<String> listOfMessagesWithSubjectKeywords(List<String> keywords) {
-    
-    return null;
+  public void listOfMessagesWithSubjectKeywords(List<String> keywords) {
+    List<String> matches = new ArrayList<>();
+
+    for (Map.Entry<String, Set<Message>> entry : arquivo.entrySet()) {
+      for (Message message : entry.getValue()) {
+        for (int i = 0; i < keywords.size(); i++) {
+          if (keywords.get(i).equals(message.getSubject())) {
+            matches.add(entry.getKey());
+          }
+        }
+      }
+    }
+      System.out.println("O(s) assunto(s) procurado(s) foi(foram) enviado(s) pelo(s) seguinte(s) remetente(s): " + matches);
   }
-
-
-
 }
