@@ -94,7 +94,6 @@ public class MailMap {
       }
     }
       System.out.println("Remetente(s) encontrado(s): " + matches);
-
   }
 
 
