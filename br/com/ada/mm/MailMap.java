@@ -74,12 +74,28 @@ public class MailMap {
     for (Map.Entry<String, Set<Message>> entry : arquivo.entrySet()) {
       for (Message message : entry.getValue()) {
         for (int i = 0; i < keywords.size(); i++) {
-          if (keywords.get(i).equals(message.getSubject())) {
+          if (message.getSubject().contains(keywords.get(i))) {
             matches.add(entry.getKey());
           }
         }
       }
     }
-      System.out.println("O(s) assunto(s) procurado(s) foi(foram) enviado(s) pelo(s) seguinte(s) remetente(s): " + matches);
+      System.out.println("Remetente(s) encontrado(s) com o(s) critério(s) especificado(s): " + matches);
   }
+
+  public void listOfMessagesWithSpecificSender(List<String> senders) {
+    List<String> matches = new ArrayList<>();
+
+    for (Map.Entry<String, Set<Message>> entry : arquivo.entrySet()) {
+        for (int i = 0; i < senders.size(); i++) {
+          if (entry.getKey().contains(senders.get(i))) {
+            matches.add(entry.getKey());
+          }
+      }
+    }
+      System.out.println("Remetente(s) encontrado(s): " + matches);
+
+  }
+
+
 }

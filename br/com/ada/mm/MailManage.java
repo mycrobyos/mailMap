@@ -37,7 +37,7 @@ public class MailManage {
 
     //O mesmo que a questão anterior, mas criando um conjunto contendo os mails;
 
-    // List<String> listOfMessagesWithSpecificSender = mailMap.listOfMessagesWithSpecificSender("daniel@ada", "joao@ada");
+    mailMap.listOfMessagesWithSpecificSender(Arrays.asList("daniel@ada.br", "joao@ada.pt", "ada@ada.jp"));
 
     //Eliminar todos os e-mails recebidos antes de uma data que é dada como parâmetro;
 
