@@ -1,6 +1,10 @@
 package br.com.ada.mm;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,27 +13,14 @@ import java.util.Set;
 
 public class MailMap {
 
-  public String sender;
-  public List<Message> inbox;
   Map<String, Set<Message>> arquivo = new HashMap<>();
+  private int length;
 
-  public String getSender() {
-    return sender;
+  public Map<String, Set<Message>> getArquivo() {
+    return arquivo;
   }
 
-  public void setSender(String sender) {
-    this.sender = sender;
-  }
-
-  public List<Message> getInbox() {
-    return inbox;
-  }
-
-  public void setInbox(List<Message> inbox) {
-    this.inbox = inbox;
-  }
-
-  public void archiveReceived(Message message) {
+  public Map<String, Set<Message>> archiveReceived(Message message) {
 
     if (!arquivo.containsKey(message.sender)) {
       Set<Message> messages = new HashSet<>();
@@ -40,6 +31,8 @@ public class MailMap {
       existingSenderMessages.add(message);
       arquivo.put(message.getSender(), existingSenderMessages);
     }
+
+    return this.arquivo;
   }
 
   public void totalOfReceivedMessages() {
@@ -80,21 +73,82 @@ public class MailMap {
         }
       }
     }
-      System.out.println("Remetente(s) encontrado(s) com o(s) critério(s) especificado(s): " + matches);
+    System.out.println("Remetente(s) encontrado(s) com o(s) critério(s) especificado(s): " + matches);
   }
 
   public void listOfMessagesWithSpecificSender(List<String> senders) {
     List<String> matches = new ArrayList<>();
 
     for (Map.Entry<String, Set<Message>> entry : arquivo.entrySet()) {
-        for (int i = 0; i < senders.size(); i++) {
-          if (entry.getKey().contains(senders.get(i))) {
-            matches.add(entry.getKey());
-          }
+      for (int i = 0; i < senders.size(); i++) {
+        if (entry.getKey().contains(senders.get(i))) {
+          matches.add(entry.getKey());
+        }
       }
     }
-      System.out.println("Remetente(s) encontrado(s): " + matches);
+    System.out.println("Remetente(s) encontrado(s): " + matches);
   }
 
+  public void cleanMessagesBeforeDate(String date, Map<String, Set<Message>> arquivo) throws ParseException {
+    var parameter = dateParser(date);
+    var messagesToBeDeleted = new HashMap<String, Set<Message>>();
+
+    for (Map.Entry<String, Set<Message>> entry : arquivo.entrySet()) {
+      for (Message message : entry.getValue()) {
+        if (message.getSentDate().before(parameter)) {
+          messagesToBeDeleted.put(entry.getKey(), entry.getValue());
+        }
+      }
+    }
+    for (Map.Entry<String, Set<Message>> entry : messagesToBeDeleted.entrySet()) {
+      arquivo.remove(entry.getKey());
+    }
+    System.out.println("As seguintes mensagens que antecedem " + date + " foram removidas:\n" + messagesToBeDeleted);
+  }
+
+  public List<String> peopleWhoSentToday() throws ParseException {
+    List<String> peopleWhoSentToday = new ArrayList<>();
+    Calendar today = Calendar.getInstance();
+    today.set(Calendar.HOUR_OF_DAY, 0);
+
+    for (Map.Entry<String, Set<Message>> entry : arquivo.entrySet()) {
+      for (Message message : entry.getValue()) {
+        if (message.getSentDate().equals(today.getTime())) {
+          peopleWhoSentToday.add(entry.getKey());
+        }
+      }
+    }
+    return peopleWhoSentToday;
+  }
+
+  public void cleanMessagesFromSenderBeforeDate(String sender, String date) throws ParseException {
+    var messagesFromSenderToBeChecked = new HashMap<String, Set<Message>>();
+
+    for (Map.Entry<String, Set<Message>> entry : arquivo.entrySet()) {
+      if (sender.equals(entry.getKey())) {
+        messagesFromSenderToBeChecked.put(entry.getKey(), entry.getValue());
+      }
+    }
+    cleanMessagesBeforeDate(date, messagesFromSenderToBeChecked);
+  }
+
+  public void sendersFromSomeCountry(String country) {
+    List<String> sendersFromCountry = new ArrayList<>();
+
+    for (Map.Entry<String, Set<Message>> entry : arquivo.entrySet()) {
+      length = entry.getKey().length();
+
+      if (country.equals(entry.getKey().substring(length - 2, length))) {
+        sendersFromCountry.add(entry.getKey());
+      }
+    }
+    System.out.println(sendersFromCountry);
+  }
+
+  private Date dateParser(String date) throws ParseException {
+    SimpleDateFormat sdf1 = new SimpleDateFormat("dd/mm/yy");
+    var parameter = sdf1.parse(date);
+    return parameter;
+  }
 
 }

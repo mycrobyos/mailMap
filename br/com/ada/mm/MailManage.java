@@ -1,17 +1,19 @@
 package br.com.ada.mm;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
 public class MailManage {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws ParseException {
 
-    Message message1 = new Message("daniel@ada.br", "09/12/22", "09/12/22", "banana", "exercicio1");
-    Message message2 = new Message("joao@ada.pt", "10/12/22", "10/12/22", "melancia", "exercicio2");
-    Message message3 = new Message("joao@ada.pt", "11/12/22", "11/12/22", "morango", "exercicio3");
-    Message message4 = new Message("maria@ada.br", "12/12/22", "12/12/22", "manga", "exercicio4");
-    Message message5 = new Message("java@ada.pt", "13/12/22", "13/12/22", "pera", "exercicio5");
+    Message message1 = new Message("daniel@ada.br", "09/12/22", "banana", "exercicio1");
+    Message message2 = new Message("joao@ada.pt", "10/12/22", "melancia", "exercicio2");
+    Message message3 = new Message("joao@ada.pt", "11/12/22", "morango", "exercicio3");
+    Message message4 = new Message("maria@ada.br", "12/12/22", "manga", "exercicio4");
+    Message message5 = new Message("java@ada.pt", "13/12/22", "pera", "exercicio5");
+    Message today = new Message("today@ada.pt", "17/12/22", "frutas de hoje", "exercicio6");
 
     MailMap mailMap = new MailMap();
     
@@ -22,6 +24,7 @@ public class MailManage {
     mailMap.archiveReceived(message3);
     mailMap.archiveReceived(message4);
     mailMap.archiveReceived(message5);
+    mailMap.archiveReceived(today);
 
     //Determinar o total de enderecos a partir dos quais se recebeu mail;
 
@@ -41,19 +44,20 @@ public class MailManage {
 
     //Eliminar todos os e-mails recebidos antes de uma data que é dada como parâmetro;
 
-    // mailMap.cleanMessagesBeforeDate("12/12/22");
+    mailMap.cleanMessagesBeforeDate("12/12/22", mailMap.getArquivo());
 
     //Criar uma lista dos endereços que hoje enviaram mails;
 
-    // List<String> messagesSentToday = mailMap.messagesSentToday();
+    List<String> peopleWhoSentToday = mailMap.peopleWhoSentToday();
+    System.out.println(peopleWhoSentToday);
     
     //Eliminar todos os mails de um dado endereço anteriores a uma data dada;
 
-    // mailMap.cleanMessagesFromSenderBeforeDate("daniel@ada", "12/12/22");
+    mailMap.cleanMessagesFromSenderBeforeDate("java@ada.pt", "15/12/22");
 
     //Criar uma listagem com todos os endereços de mail oriundos de Portugal;
 
-    // List<String> sendersFromSomeCountry("pt");
+    mailMap.sendersFromSomeCountry("pt");
 
 
   }
