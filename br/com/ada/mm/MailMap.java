@@ -151,4 +151,25 @@ public class MailMap {
     return parameter;
   }
 
+  public void antiSpam(List<String> keywords) {
+    var messagesToBeDeleted = new HashMap<String, Set<Message>>();
+
+    for (String keyword : keywords) {
+      for (Map.Entry<String, Set<Message>> entry : arquivo.entrySet()) {
+        for (Message message : entry.getValue()) {
+          if (message.getSubject().contains(keyword)) {
+            messagesToBeDeleted.put(entry.getKey(), entry.getValue());
+          }
+        }
+      }
+    }
+
+    for (Map.Entry<String, Set<Message>> entry : messagesToBeDeleted.entrySet()) {
+      arquivo.remove(entry.getKey());
+    }
+    System.out.println("As seguintes mensagens com palavras proibidas foram removidas:\n" + messagesToBeDeleted);
+
+
+  }
+
 }

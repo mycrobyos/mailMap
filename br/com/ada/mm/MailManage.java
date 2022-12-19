@@ -14,6 +14,7 @@ public class MailManage {
     Message message4 = new Message("maria@ada.br", "12/12/22", "manga", "exercicio4");
     Message message5 = new Message("java@ada.pt", "13/12/22", "pera", "exercicio5");
     Message today = new Message("today@ada.pt", "17/12/22", "frutas de hoje", "exercicio6");
+    Message jilo = new Message("feira@ada.pt", "17/12/22", "jilo barato", "exercicio7");
 
     MailMap mailMap = new MailMap();
     
@@ -25,8 +26,9 @@ public class MailManage {
     mailMap.archiveReceived(message4);
     mailMap.archiveReceived(message5);
     mailMap.archiveReceived(today);
+    mailMap.archiveReceived(jilo);
 
-    //Determinar o total de enderecos a partir dos quais se recebeu mail;
+    // Determinar o total de enderecos a partir dos quais se recebeu mail;
 
     mailMap.totalOfReceivedMessages();
 
@@ -50,6 +52,10 @@ public class MailManage {
 
     List<String> peopleWhoSentToday = mailMap.peopleWhoSentToday();
     System.out.println(peopleWhoSentToday);
+
+    //Dada uma lista de palavras, eliminar todos os mails de um dado endereço que no seu assunto contenham uma qualquer destas (anti-spam);
+
+    mailMap.antiSpam(Arrays.asList("jaca", "jilo", "bucho"));
     
     //Eliminar todos os mails de um dado endereço anteriores a uma data dada;
 
